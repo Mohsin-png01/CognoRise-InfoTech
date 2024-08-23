@@ -1,58 +1,40 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('task-form');
-    const taskInput = document.getElementById('task-input');
-    const taskList = document.getElementById('task-list');
+    const weightInput = document.getElementById('weight');
+    const heightInput = document.getElementById('height');
+    const calculateButton = document.getElementById('calculate');
+    const resultDiv = document.getElementById('result');
+    const bmiValueSpan = document.getElementById('bmi-value');
+    const bmiCategorySpan = document.getElementById('bmi-category');
 
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    calculateButton.addEventListener('click', calculateBMI);
 
-    function renderTasks() {
-        taskList.innerHTML = '';
-        tasks.forEach((task, index) => {
-            const li = document.createElement('li');
-            li.className = 'fade-in';
-            li.innerHTML = `
-                <span class="${task.completed ? 'completed' : ''}">${task.text}</span>
-                <div class="task-buttons">
-                    <button class="edit-btn" onclick="editTask(${index})"><i class="fas fa-edit"></i></button>
-                    <button class="delete-btn" onclick="deleteTask(${index})"><i class="fas fa-trash-alt"></i></button>
-                </div>
-            `;
-            li.addEventListener('click', () => toggleComplete(index));
-            taskList.appendChild(li);
-        });
+    function calculateBMI() {
+        const weight = parseFloat(weightInput.value);
+        const height = parseFloat(heightInput.value) / 100; // Convert cm to m
+
+        if (isNaN(weight) || isNaN(height) || weight <= 0 || height <= 0) {
+            alert('Please enter valid weight and height values.');
+            return;
+        }
+
+        const bmi = weight / (height * height);
+        const roundedBMI = bmi.toFixed(1);
+
+        bmiValueSpan.textContent = roundedBMI;
+        bmiCategorySpan.textContent = getBMICategory(bmi);
+
+        resultDiv.classList.remove('hidden');
     }
 
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const text = taskInput.value.trim();
-        if (text) {
-            tasks.push({ text, completed: false });
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-            taskInput.value = '';
-            renderTasks();
+    function getBMICategory(bmi) {
+        if (bmi < 18.5) {
+            return 'Underweight';
+        } else if (bmi < 25) {
+            return 'Normal weight';
+        } else if (bmi < 30) {
+            return 'Overweight';
+        } else {
+            return 'Obese';
         }
-    });
-
-    window.editTask = (index) => {
-        const newText = prompt('Edit task:', tasks[index].text);
-        if (newText !== null) {
-            tasks[index].text = newText.trim();
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-            renderTasks();
-        }
-    };
-
-    window.deleteTask = (index) => {
-        tasks.splice(index, 1);
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-        renderTasks();
-    };
-
-    function toggleComplete(index) {
-        tasks[index].completed = !tasks[index].completed;
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-        renderTasks();
     }
-
-    renderTasks();
 });

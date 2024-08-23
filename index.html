@@ -3,18 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <title>BMI Calculator</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>My Professional To-Do List</h1>
-        <form id="task-form">
-            <input type="text" id="task-input" placeholder="Enter a new task" required>
-            <button type="submit"><i class="fas fa-plus"></i> Add Task</button>
-        </form>
-        <ul id="task-list"></ul>
+        <h1>BMI Calculator</h1>
+        <div class="input-group">
+            <label for="weight">Weight (kg):</label>
+            <input type="number" id="weight" placeholder="Enter weight" step="0.1" min="0">
+        </div>
+        <div class="input-group">
+            <label for="height">Height (cm):</label>
+            <input type="number" id="height" placeholder="Enter height" step="0.1" min="0">
+        </div>
+        <button id="calculate">Calculate BMI</button>
+        <div id="result" class="hidden">
+            <h2>Your BMI: <span id="bmi-value"></span></h2>
+            <p>Category: <span id="bmi-category"></span></p>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
